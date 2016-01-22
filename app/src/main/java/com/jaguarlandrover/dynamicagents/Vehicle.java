@@ -73,7 +73,7 @@ public class Vehicle
     }
 
     public boolean isConfigured() {
-        return (mId == null || (mRememberPin  && mPin == null));
+        return !(mId == null || (mRememberPin && mPin == null));
     }
 
     public void addVehicleUpdateListener(VehicleUpdateListener listener) {

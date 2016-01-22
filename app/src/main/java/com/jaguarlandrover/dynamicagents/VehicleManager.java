@@ -18,21 +18,29 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
-public class VehicleManager implements Vehicle.VehicleUpdateListener
+public class VehicleManager //implements Vehicle.VehicleUpdateListener
 {
     private final static String TAG = "DynamicAgents:VehicleManager";
 
-    private final static String VEHICLE_ARRAY_KEY = "vehicle_array_key";
+    private final static String KEY_VEHICLE_ARRAY = "key_vehicle_array";
 
-    private static VehicleManager ourInstance = new VehicleManager();
+    //private static VehicleManager ourInstance = new VehicleManager();
 
     private static Gson gson = new Gson();
 
-    private static ArrayList<Vehicle> vehicles = null;
-    private static boolean isLoaded = false;
+    private static Vehicle.VehicleUpdateListener vehicleUpdateListener = new Vehicle.VehicleUpdateListener()
+    {
+        @Override
+        public void onVehicleUpdated() {
+            VehicleManager.saveVehicles();
+        }
+    };
+
+    private static ArrayList<Vehicle> vehicles = loadVehicles();
+
+    //private static boolean            isLoaded = false;
 
     private VehicleManager() {
         VehicleManager.loadVehicles();
@@ -41,11 +49,12 @@ public class VehicleManager implements Vehicle.VehicleUpdateListener
     private static void saveVehicles() {
         String vehiclesPrefsString = gson.toJson(vehicles);
 
-        SharedPrefsManager.putStringInPrefs(VEHICLE_ARRAY_KEY, vehiclesPrefsString);
+        SharedPrefsManager.putStringInPrefs(KEY_VEHICLE_ARRAY, vehiclesPrefsString);
     }
 
-    private static void loadVehicles() {
-        String vehiclesPrefsString = SharedPrefsManager.getStringFromPrefs(VEHICLE_ARRAY_KEY, null);
+    private static ArrayList<Vehicle> loadVehicles() {
+        ArrayList<Vehicle> tempList = new ArrayList<>(Collections.singletonList(new Vehicle()));
+        String vehiclesPrefsString = SharedPrefsManager.getStringFromPrefs(KEY_VEHICLE_ARRAY, null);
 
         if (vehiclesPrefsString != null) {
             Type collectionType = new TypeToken<Collection<Vehicle>>()
@@ -54,51 +63,47 @@ public class VehicleManager implements Vehicle.VehicleUpdateListener
 
             try {
                 Collection<Vehicle> collection = gson.fromJson(vehiclesPrefsString, collectionType);
-                vehicles = new ArrayList<>(collection);
+                tempList = new ArrayList<>(collection);
             } catch (Exception e) {
                 e.printStackTrace();
-                vehicles = new ArrayList<>();
             }
-        } else {
-            vehicles = new ArrayList<>();
         }
 
-        isLoaded = true;
+        for (Vehicle vehicle : tempList)
+            vehicle.addVehicleUpdateListener(vehicleUpdateListener);
+
+        //isLoaded = true;
+
+        return tempList;
     }
 
     public static void addVehicle(Vehicle vehicle) {
-        if (!isLoaded) loadVehicles();
+        //if (!isLoaded) loadVehicles();
 
-        vehicle.addVehicleUpdateListener(ourInstance);
+        vehicle.addVehicleUpdateListener(vehicleUpdateListener);
         vehicles.add(vehicle);
         saveVehicles();
     }
 
     public static void removeVehicle(Vehicle vehicle) {
-        if (!isLoaded) loadVehicles();
+        //if (!isLoaded) loadVehicles();
 
-        vehicle.removeVehicleUpdateListener(ourInstance);
+        vehicle.removeVehicleUpdateListener(vehicleUpdateListener);
         vehicles.remove(vehicle);
         saveVehicles();
     }
 
-    public static void removeAllVehicles() {
-        vehicles = null;
-        saveVehicles();
-    }
-
     public static ArrayList<Vehicle> getVehicles() {
-        if (!isLoaded) loadVehicles();
+        //if (!isLoaded) loadVehicles();
         return vehicles;
     }
 
     public static boolean isConfigured() {
-        if (!isLoaded) loadVehicles();
-        return (vehicles == null);
-    }
+        //if (!isLoaded) loadVehicles();
+        for (Vehicle vehicle : vehicles)
+            if (!vehicle.isConfigured())
+                return false;
 
-    @Override
-    public void onVehicleUpdated() {
-        VehicleManager.saveVehicles();
+        return true;
     }
 }

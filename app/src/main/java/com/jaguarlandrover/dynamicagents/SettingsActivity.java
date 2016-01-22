@@ -16,6 +16,8 @@ package com.jaguarlandrover.dynamicagents;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,6 +41,7 @@ public class SettingsActivity extends ActionBarActivity
     Switch mRememberPin;
 
     Button mSubmitButton;
+    Button mCancelButton;
 
     Vehicle mVehicle;
 
@@ -47,8 +50,8 @@ public class SettingsActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        if (VehicleManager.getVehicles() == null || VehicleManager.getVehicles().size() == 0)
-            VehicleManager.addVehicle(new Vehicle());
+//        if (VehicleManager.getVehicles() == null || VehicleManager.getVehicles().size() == 0)
+//            VehicleManager.addVehicle(new Vehicle());
 
         mVehicle = VehicleManager.getVehicles().get(0);
 
@@ -65,6 +68,7 @@ public class SettingsActivity extends ActionBarActivity
         mRememberPin = (Switch) findViewById(R.id.remember_pin_switch);
 
         mSubmitButton = (Button) findViewById(R.id.settings_submit_button);
+        mCancelButton = (Button) findViewById(R.id.settings_cancel_button);
 
         mUrlEditText.setText(BackendServer.getServerUrl());
         mPortEditText.setText(BackendServer.getPort().toString());
@@ -85,11 +89,44 @@ public class SettingsActivity extends ActionBarActivity
                 }
             };
 
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // check Fields For Empty Values
+                if (areInputsValid()) {
+                    mSubmitButton.setEnabled(true);
+                } else {
+                    mSubmitButton.setEnabled(false);
+                }
+            }
+        };
+
+        /* If we open the Settings activity, and we already have a valid configuration data, then the user can cancel without saving
+           any changes, even if the new input is invalid. If there current configuration data isn't valid, they can't cancel at all.
+           They have to enter valid configuration data and save it, before preceding to the main application. */
+        if (areInputsValid()) {
+            mCancelButton.setVisibility(View.VISIBLE);
+        } else {
+            mCancelButton.setVisibility(View.GONE);
+        }
+
         mUrlEditText.setOnEditorActionListener(enterListener);
         mPortEditText.setOnEditorActionListener(enterListener);
-
         mVehicleIdEditText.setOnEditorActionListener(enterListener);
         mVehiclePinEditText.setOnEditorActionListener(enterListener);
+
+        mUrlEditText.addTextChangedListener(textWatcher);
+        mPortEditText.addTextChangedListener(textWatcher);
+        mVehicleIdEditText.addTextChangedListener(textWatcher);
+        mVehiclePinEditText.addTextChangedListener(textWatcher);
 
         mRememberPin.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {
@@ -124,6 +161,21 @@ public class SettingsActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+    private boolean editTextIsEmpty(EditText editText) {
+        return editText.length() == 0;
+    }
+    private boolean areInputsValid() {
+        if (editTextIsEmpty(mUrlEditText) ||
+                editTextIsEmpty(mPortEditText) ||
+                editTextIsEmpty(mVehicleIdEditText) ||
+                (editTextIsEmpty(mVehiclePinEditText) && mRememberPin.isChecked()))
+            return false;
+
+        // TODO: More validation here if necessary
+
+        return true;
+    }
+
     public void updateRememberPin(boolean isChecked) {
         if (isChecked) {
             mVehiclePinEditText.setVisibility(View.VISIBLE);
@@ -137,7 +189,8 @@ public class SettingsActivity extends ActionBarActivity
     }
 
     public void settingsSubmitButtonClicked(View view) {
-        // TODO: Validate input (correct URLs, etc.)
+        if (!areInputsValid())
+            return;
 
         BackendServer.setServerUrl(mUrlEditText.getText().toString().trim());
         BackendServer.setPort(mPortEditText.getText().toString().isEmpty() ? 0 : Integer.parseInt((mPortEditText.getText().toString().trim())));
@@ -145,14 +198,11 @@ public class SettingsActivity extends ActionBarActivity
         mVehicle.setId(mVehicleIdEditText.getText().toString().trim());
         mVehicle.setPin(mVehiclePinEditText.getText().toString().trim());
 
-        if (BackendServer.isConfigured() && mVehicle.isConfigured())
-            finish();
+        finish();
     }
 
-    public void settingsCancelButtonClicked(View view) {
-        if (BackendServer.isConfigured() && mVehicle.isConfigured())
-            finish();
-    }
-
-
+//    public void settingsCancelButtonClicked(View view) {
+//        if (BackendServer.isConfigured() && mVehicle.isConfigured())
+//            finish();
+//    }
 }
