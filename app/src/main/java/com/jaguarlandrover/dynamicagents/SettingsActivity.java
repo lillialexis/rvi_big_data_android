@@ -14,6 +14,7 @@ package com.jaguarlandrover.dynamicagents;
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -103,8 +104,10 @@ public class SettingsActivity extends ActionBarActivity
                 // check Fields For Empty Values
                 if (areInputsValid()) {
                     mSubmitButton.setEnabled(true);
+                    swapButtonBackground(mSubmitButton, R.drawable.black_button_small);
                 } else {
                     mSubmitButton.setEnabled(false);
+                    swapButtonBackground(mSubmitButton, R.drawable.light_grey_button_small);
                 }
             }
         };
@@ -135,7 +138,7 @@ public class SettingsActivity extends ActionBarActivity
             }
         });
 
-        updateRememberPin(mVehicle.getRememberPin());
+        mRememberPin.setChecked(mVehicle.getRememberPin());
     }
 
 //    @Override
@@ -144,6 +147,10 @@ public class SettingsActivity extends ActionBarActivity
 //        getMenuInflater().inflate(R.menu.menu_settings, menu);
 //        return true;
 //    }
+
+    private void swapButtonBackground(Button button, int resource) {
+        button.setBackground(ContextCompat.getDrawable(this, resource));
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -183,6 +190,8 @@ public class SettingsActivity extends ActionBarActivity
         } else {
             mVehiclePinEditText.setVisibility(View.GONE);
             mVehiclePinLabel.setVisibility(View.GONE);
+
+            mVehicle.setPin(null);
         }
 
         mVehicle.setRememberPin(isChecked);
@@ -201,8 +210,7 @@ public class SettingsActivity extends ActionBarActivity
         finish();
     }
 
-//    public void settingsCancelButtonClicked(View view) {
-//        if (BackendServer.isConfigured() && mVehicle.isConfigured())
-//            finish();
-//    }
+    public void settingsCancelButtonClicked(View view) {
+        finish();
+    }
 }

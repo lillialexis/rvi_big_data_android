@@ -8,18 +8,27 @@
                 android:paddingTop="@dimen/activity_vertical_margin"
                 tools:context="com.jaguarlandrover.dynamicagents.SettingsActivity">
 
+    <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
+    <LinearLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="0px"
+        android:layout_height="0px"/>
+
     <GridLayout
-        android:id="@+id/server_settings_grid"
+        android:id="@+id/server_and_vehicle_settings_grid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:columnCount="4"
-        android:rowCount="2">
+        android:rowCount="4">
 
         <TextView
             android:id="@+id/server_url_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/marginTop"
+            android:paddingStart="@dimen/paddingRight"
+            android:paddingEnd="@dimen/paddingRight"
             android:text="@string/server_url_string"/>
 
         <EditText
@@ -28,18 +37,20 @@
             android:layout_height="wrap_content"
             android:layout_columnSpan="3"
             android:layout_marginTop="@dimen/marginTop"
-            android:imeOptions="actionDone"
-            android:inputType="textUri"
             android:paddingBottom="@dimen/paddingBottom"
             android:paddingStart="@dimen/paddingLeft"
             android:paddingEnd="@dimen/paddingRight"
-            android:paddingTop="@dimen/paddingTop"/>
+            android:paddingTop="@dimen/paddingTop"
+            android:imeOptions="actionDone"
+            android:inputType="textUri"/>
 
         <TextView
             android:id="@+id/server_port_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/marginTop"
+            android:paddingStart="@dimen/paddingRight"
+            android:paddingEnd="@dimen/paddingRight"
             android:text="@string/server_port_string"/>
 
         <EditText
@@ -48,28 +59,20 @@
             android:layout_height="wrap_content"
             android:layout_columnSpan="3"
             android:layout_marginTop="@dimen/marginTop"
-            android:imeOptions="actionDone"
-            android:inputType="text"
             android:paddingBottom="@dimen/paddingBottom"
             android:paddingStart="@dimen/paddingLeft"
             android:paddingEnd="@dimen/paddingRight"
-            android:paddingTop="@dimen/paddingTop"/>
-
-    </GridLayout>
-
-    <GridLayout
-        android:id="@+id/vehicle_id_and_pin_grid_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/server_settings_grid"
-        android:columnCount="4"
-        android:rowCount="2">
+            android:paddingTop="@dimen/paddingTop"
+            android:imeOptions="actionDone"
+            android:inputType="number"/>
 
         <TextView
             android:id="@+id/vehicle_id_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/marginTop"
+            android:paddingStart="@dimen/paddingRight"
+            android:paddingEnd="@dimen/paddingRight"
             android:text="@string/vehicle_id_string"/>
 
         <EditText
@@ -78,6 +81,10 @@
             android:layout_height="wrap_content"
             android:layout_columnSpan="3"
             android:layout_marginTop="@dimen/marginTop"
+            android:paddingBottom="@dimen/paddingBottom"
+            android:paddingStart="@dimen/paddingLeft"
+            android:paddingEnd="@dimen/paddingRight"
+            android:paddingTop="@dimen/paddingTop"
             android:imeOptions="actionDone"
             android:inputType="text"/>
 
@@ -87,6 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/marginTop"
             android:paddingStart="@dimen/paddingRight"
+            android:paddingEnd="@dimen/paddingRight"
             android:text="@string/vehicle_pin_string"
             android:visibility="gone"/>
 
@@ -96,8 +104,12 @@
             android:layout_height="wrap_content"
             android:layout_columnSpan="3"
             android:layout_marginTop="@dimen/marginTop"
+            android:paddingBottom="@dimen/paddingBottom"
+            android:paddingStart="@dimen/paddingLeft"
+            android:paddingEnd="@dimen/paddingRight"
+            android:paddingTop="@dimen/paddingTop"
             android:imeOptions="actionDone"
-            android:inputType="text"
+            android:inputType="number"
             android:visibility="gone"/>
 
     </GridLayout>
@@ -107,7 +119,7 @@
         android:id="@+id/remember_pin_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/vehicle_id_and_pin_grid_layout"
+        android:layout_below="@+id/server_and_vehicle_settings_grid"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:background="@drawable/light_grey_button_small"
@@ -129,7 +141,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/marginRight"
-            android:background="@drawable/black_button"
+            android:background="@drawable/black_button_small"
             android:onClick="settingsSubmitButtonClicked"
             android:text="@string/done_string"
             android:textColor="@color/white"
@@ -139,7 +151,7 @@
             android:id="@+id/settings_cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/black_button"
+            android:background="@drawable/black_button_small"
             android:onClick="settingsCancelButtonClicked"
             android:text="@string/cancel_string"
             android:textColor="@color/white"/>
