@@ -1,5 +1,6 @@
 package com.jaguarlandrover.dynamicagents;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -28,6 +29,16 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!VehicleManager.isConfigured() || !BackendServer.isConfigured())
+            startActivity(new Intent(this, SettingsActivity.class));
+//        else
+//            HVACManager.start();
     }
 
     @Override

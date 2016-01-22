@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">DynamicAgents</string>
     <string name="action_settings">Settings</string>
+    <string name="prefs_string">dynamic_agents_prefs</string>
+    <string name="remember_pin_string">Remember the PIN</string>
+    <string name="vehicle_pin_string">Vehicle PIN</string>
+    <string name="vehicle_id_string">Vehicle ID</string>
+    <string name="server_port_string">Server Port</string>
+    <string name="server_url_string">Server URL</string>
+    <string name="done_string">Done</string>
+    <string name="cancel_string">cancel</string>
 </resources>
