@@ -8,7 +8,7 @@ package com.jaguarlandrover.dynamicagents;
  * Mozilla Public License is at https://www.mozilla.org/MPL/2.0/
  *
  * File:    SettingsActivity.java
- * Project: HVACDemo
+ * Project: DynamicAgentsAndroidm
  *
  * Created by Lilli Szafranski on 5/19/15.
  *
@@ -140,7 +140,7 @@ public class SettingsActivity extends ActionBarActivity
         // TODO: Validate input (correct URLs, etc.)
 
         BackendServer.setServerUrl(mUrlEditText.getText().toString().trim());
-        BackendServer.setPort(Integer.parseInt((mPortEditText.getText().toString().trim())));
+        BackendServer.setPort(mPortEditText.getText().toString().isEmpty() ? 0 : Integer.parseInt((mPortEditText.getText().toString().trim())));
 
         mVehicle.setId(mVehicleIdEditText.getText().toString().trim());
         mVehicle.setPin(mVehiclePinEditText.getText().toString().trim());
