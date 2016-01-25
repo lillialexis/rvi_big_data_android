@@ -77,8 +77,17 @@ public class Vehicle
         fireUpdate();
     }
 
-    public boolean isEqual(Vehicle other) {
-        return (this.getId().equals(other.getId()) && this.getPin().equals(other.getPin()) && this.getRememberPin().equals(other.getRememberPin()));
+    public boolean equals(Vehicle other) {
+
+        if (this.getId() == null && other.getId() != null) return false;
+        if (this.getId() != null && !this.getId().equals(other.getId())) return false;
+
+        if (this.getPin() == null && other.getPin() != null) return false;
+        if (this.getPin() != null && !this.getPin().equals(other.getPin())) return false;
+
+        if (this.getRememberPin() != other.getRememberPin()) return false;
+
+        return true;
     }
 
     public boolean isConfigured() {
