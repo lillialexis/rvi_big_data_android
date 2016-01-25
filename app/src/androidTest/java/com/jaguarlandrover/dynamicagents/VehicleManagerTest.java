@@ -77,6 +77,12 @@ public class VehicleManagerTest extends AndroidTestCase
         return SharedPrefsManager.getStringFromPrefs(KEY_VEHICLE_ARRAY, null);
     }
 
+    private void clearPrefs() {
+        SharedPrefsManager.deleteValueFromPrefs(KEY_VEHICLE_ARRAY);
+        loadVehicleManager();
+    }
+
+
     private void loadVehicleManager() {
         try {
             Field field = VehicleManager.class.getDeclaredField("vehicles");
@@ -123,7 +129,7 @@ public class VehicleManagerTest extends AndroidTestCase
 
     public final void testVehicleManagerUpdateListener() {
         /* Test the update listener of the empty vehicle VM was initialized with when prefs str was null */
-        setVehiclePrefsString(null);
+        clearPrefs();
 
         assertNull(getVehiclePrefsString());
 
