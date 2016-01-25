@@ -14,56 +14,56 @@ package com.jaguarlandrover.dynamicagents;
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+import android.annotation.SuppressLint;
+
+@SuppressLint("LongLogTag")
 public class BackendServer
 {
     private final static String TAG = "DynamicAgents:BackendServer";
 
-    private final static String SERVER_URL_KEY = "server_url_key";
-    private final static String PORT_KEY       = "port_key";
+    private final static String KEY_SERVER_URL = "key_server_url";
+    private final static String KEY_PORT       = "key_port";
 
-    private static BackendServer ourInstance = new BackendServer();
-
-    private static String serverUrl;
-
-    private static Integer port;
-
-    private static boolean isLoaded;
+    private static String  serverUrl = loadServerUrl();
+    private static Integer port      = loadPort();
 
     private BackendServer() {
-        //BackendServer.loadServer();
+    }
+
+    private static String loadServerUrl() {
+        return SharedPrefsManager.getStringFromPrefs(KEY_SERVER_URL, null);
+    }
+
+    private static Integer loadPort() {
+        return SharedPrefsManager.getIntFromPrefs(KEY_PORT, 0);
     }
 
     private static void loadServer() {
-        serverUrl = SharedPrefsManager.getStringFromPrefs(SERVER_URL_KEY, null);
-        port = SharedPrefsManager.getIntFromPrefs(PORT_KEY, 0);
-
-        isLoaded = true;
+        serverUrl = loadServerUrl();
+        port      = loadPort();
     }
 
     private static void saveServer() {
-        SharedPrefsManager.putStringInPrefs(SERVER_URL_KEY, serverUrl);
-        SharedPrefsManager.putIntInPrefs(PORT_KEY, port);
+        SharedPrefsManager.putStringInPrefs(KEY_SERVER_URL, serverUrl);
+        SharedPrefsManager.putIntInPrefs(KEY_PORT, port);
     }
 
     public static boolean isConfigured() {
-        if (!isLoaded) loadServer();
-        return (serverUrl != null) && (port != null);
+        return (serverUrl != null) && (port != 0);
     }
 
     public static String getServerUrl() {
-        if (!isLoaded) loadServer();
         return serverUrl;
     }
 
     public static void setServerUrl(String serverUrl) {
-        if (serverUrl.isEmpty()) serverUrl = null;
+        if (serverUrl != null && serverUrl.isEmpty()) serverUrl = null;
         BackendServer.serverUrl = serverUrl;
 
         saveServer();
     }
 
     public static Integer getPort() {
-        if (!isLoaded) loadServer();
         return port;
     }
 

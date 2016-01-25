@@ -36,9 +36,10 @@ public class Vehicle
     public Vehicle() {
     }
 
-    public Vehicle(String id, String pin) {
-        mId = id;
-        mPin = pin;
+    public Vehicle(String id, String pin, boolean rememberPin) {
+        setId(id);
+        setRememberPin(rememberPin);
+        setPin(pin);
     }
 
     public String getPin() {
@@ -46,7 +47,9 @@ public class Vehicle
     }
 
     public void setPin(String pin) {
-        if (pin.isEmpty()) pin = null;
+        if (!mRememberPin) return;
+
+        if (pin != null && pin.isEmpty()) pin = null;
         mPin = pin;
 
         fireUpdate();
@@ -57,7 +60,7 @@ public class Vehicle
     }
 
     public void setId(String id) {
-        if (id.isEmpty()) id = null;
+        if (id != null && id.isEmpty()) id = null;
         mId = id;
 
         fireUpdate();
@@ -68,8 +71,23 @@ public class Vehicle
     }
 
     public void setRememberPin(Boolean rememberPin) {
+        if (!rememberPin) setPin(null);
+
         mRememberPin = rememberPin;
         fireUpdate();
+    }
+
+    public boolean equals(Vehicle other) {
+
+        if (this.getId() == null && other.getId() != null) return false;
+        if (this.getId() != null && !this.getId().equals(other.getId())) return false;
+
+        if (this.getPin() == null && other.getPin() != null) return false;
+        if (this.getPin() != null && !this.getPin().equals(other.getPin())) return false;
+
+        if (this.getRememberPin() != other.getRememberPin()) return false;
+
+        return true;
     }
 
     public boolean isConfigured() {
