@@ -14,19 +14,20 @@ package com.jaguarlandrover.dynamicagents;
  *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+import android.annotation.SuppressLint;
+import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.*;
 
-public class VehicleManager //implements Vehicle.VehicleUpdateListener
+@SuppressLint("LongLogTag")
+public class VehicleManager
 {
     private final static String TAG = "DynamicAgents:VehicleManager";
 
     private final static String KEY_VEHICLE_ARRAY = "key_vehicle_array";
-
-    //private static VehicleManager ourInstance = new VehicleManager();
 
     private static Gson gson = new Gson();
 
@@ -40,21 +41,25 @@ public class VehicleManager //implements Vehicle.VehicleUpdateListener
 
     private static ArrayList<Vehicle> vehicles = loadVehicles();
 
-    //private static boolean            isLoaded = false;
-
     private VehicleManager() {
-        VehicleManager.loadVehicles();
     }
 
     private static void saveVehicles() {
         String vehiclesPrefsString = gson.toJson(vehicles);
 
+        Log.d(TAG, "Saving vehicles: " + vehiclesPrefsString);
+
         SharedPrefsManager.putStringInPrefs(KEY_VEHICLE_ARRAY, vehiclesPrefsString);
     }
 
     private static ArrayList<Vehicle> loadVehicles() {
+        assert gson != null;
+        assert vehicleUpdateListener != null;
+
         ArrayList<Vehicle> tempList = new ArrayList<>(Collections.singletonList(new Vehicle()));
         String vehiclesPrefsString = SharedPrefsManager.getStringFromPrefs(KEY_VEHICLE_ARRAY, null);
+
+        Log.d(TAG, "Loading vehicles: " + vehiclesPrefsString);
 
         if (vehiclesPrefsString != null) {
             Type collectionType = new TypeToken<Collection<Vehicle>>()
@@ -72,34 +77,26 @@ public class VehicleManager //implements Vehicle.VehicleUpdateListener
         for (Vehicle vehicle : tempList)
             vehicle.addVehicleUpdateListener(vehicleUpdateListener);
 
-        //isLoaded = true;
-
         return tempList;
     }
 
     public static void addVehicle(Vehicle vehicle) {
-        //if (!isLoaded) loadVehicles();
-
         vehicle.addVehicleUpdateListener(vehicleUpdateListener);
         vehicles.add(vehicle);
         saveVehicles();
     }
 
     public static void removeVehicle(Vehicle vehicle) {
-        //if (!isLoaded) loadVehicles();
-
         vehicle.removeVehicleUpdateListener(vehicleUpdateListener);
         vehicles.remove(vehicle);
         saveVehicles();
     }
 
     public static ArrayList<Vehicle> getVehicles() {
-        //if (!isLoaded) loadVehicles();
         return vehicles;
     }
 
     public static boolean isConfigured() {
-        //if (!isLoaded) loadVehicles();
         for (Vehicle vehicle : vehicles)
             if (!vehicle.isConfigured())
                 return false;
