@@ -37,8 +37,8 @@ public class MainActivity extends AppCompatActivity
 
         if (!VehicleManager.isConfigured() || !BackendServer.isConfigured())
             startActivity(new Intent(this, SettingsActivity.class));
-//        else
-//            HVACManager.start();
+        else
+            BackendServer.connectForVehicle(VehicleManager.getVehicles().get(0));
     }
 
     @Override

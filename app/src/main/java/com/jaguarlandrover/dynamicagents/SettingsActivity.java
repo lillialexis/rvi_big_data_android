@@ -20,7 +20,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -71,12 +70,12 @@ public class SettingsActivity extends ActionBarActivity
         mSubmitButton = (Button) findViewById(R.id.settings_submit_button);
         mCancelButton = (Button) findViewById(R.id.settings_cancel_button);
 
-        mUrlEditText.setText(BackendServer.getServerUrl());
-        mPortEditText.setText(BackendServer.getPort().toString());
+        if (BackendServer.getServerUrl() != null) mUrlEditText.setText(BackendServer.getServerUrl());
+        if (BackendServer.getPort() != 0) mPortEditText.setText(BackendServer.getPort().toString());
 
         if (mVehicle != null) {
             mVehicleIdEditText.setText(mVehicle.getId());
-            mVehiclePinEditText.setText(mVehicle.getPin());
+            mVehiclePinEditText.setText(mVehicle.getStoredPin());
         }
 
         EditText.OnEditorActionListener enterListener = new EditText.OnEditorActionListener() {
@@ -138,7 +137,7 @@ public class SettingsActivity extends ActionBarActivity
             }
         });
 
-        mRememberPin.setChecked(mVehicle.getRememberPin());
+        mRememberPin.setChecked(mVehicle.getShouldStorePin());
     }
 
 //    @Override
@@ -191,10 +190,10 @@ public class SettingsActivity extends ActionBarActivity
             mVehiclePinEditText.setVisibility(View.GONE);
             mVehiclePinLabel.setVisibility(View.GONE);
 
-            mVehicle.setPin(null);
+            mVehicle.setStoredPin(null);
         }
 
-        mVehicle.setRememberPin(isChecked);
+        mVehicle.setShouldStorePin(isChecked);
     }
 
     public void settingsSubmitButtonClicked(View view) {
@@ -205,7 +204,7 @@ public class SettingsActivity extends ActionBarActivity
         BackendServer.setPort(mPortEditText.getText().toString().isEmpty() ? 0 : Integer.parseInt((mPortEditText.getText().toString().trim())));
 
         mVehicle.setId(mVehicleIdEditText.getText().toString().trim());
-        mVehicle.setPin(mVehiclePinEditText.getText().toString().trim());
+        mVehicle.setStoredPin(mVehiclePinEditText.getText().toString().trim());
 
         finish();
     }

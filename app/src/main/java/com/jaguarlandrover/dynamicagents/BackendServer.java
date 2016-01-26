@@ -72,4 +72,12 @@ public class BackendServer
 
         saveServer();
     }
+
+    public static void connectForVehicle(Vehicle vehicle) {
+        BackendServerRequest.setBaseUrl(serverUrl + ":" + port.toString());
+        BackendServerRequest.setPathComponent("/static/rvi/dynamic_agents/");
+
+        BackendServerRequest request = new BackendServerRequest(BackendServerRequest.RequestMethod.DA_DATA, vehicle);
+        request.send();
+    }
 }

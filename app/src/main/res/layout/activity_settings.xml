@@ -42,7 +42,8 @@
             android:paddingEnd="@dimen/paddingRight"
             android:paddingTop="@dimen/paddingTop"
             android:imeOptions="actionDone"
-            android:inputType="textUri"/>
+            android:inputType="textUri"
+            android:text="@string/rvi_test2_default_url"/>
 
         <TextView
             android:id="@+id/server_port_label"
@@ -64,7 +65,8 @@
             android:paddingEnd="@dimen/paddingRight"
             android:paddingTop="@dimen/paddingTop"
             android:imeOptions="actionDone"
-            android:inputType="number"/>
+            android:inputType="number"
+            android:text="@string/rvi_test2_default_port"/>
 
         <TextView
             android:id="@+id/vehicle_id_label"

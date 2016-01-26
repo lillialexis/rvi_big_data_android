@@ -15,7 +15,6 @@ package com.jaguarlandrover.dynamicagents;
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 import android.test.AndroidTestCase;
-import android.util.Log;
 
 public class VehicleTest extends AndroidTestCase
 {
@@ -56,72 +55,72 @@ public class VehicleTest extends AndroidTestCase
         Vehicle v = new Vehicle();
 
         assertEquals(v.getId(), null);
-        assertEquals(v.getPin(), null);
-        assertFalse(v.getRememberPin());
+        assertEquals(v.getStoredPin(), null);
+        assertFalse(v.getShouldStorePin());
         assertFalse(v.isConfigured());
 
         v = new Vehicle();
 
         v.setId(TEST_ID_1);
-        v.setRememberPin(true);
-        v.setPin(TEST_PIN_1);
+        v.setShouldStorePin(true);
+        v.setStoredPin(TEST_PIN_1);
 
         assertTrue(v.isConfigured());
 
         v = new Vehicle(null, null, false);
 
         assertEquals(v.getId(), null);
-        assertEquals(v.getPin(), null);
-        assertFalse(v.getRememberPin());
+        assertEquals(v.getStoredPin(), null);
+        assertFalse(v.getShouldStorePin());
         assertFalse(v.isConfigured());
 
         v = new Vehicle(TEST_ID_2, null, false);
 
         assertEquals(v.getId(), TEST_ID_2);
-        assertEquals(v.getPin(), null);
-        assertFalse(v.getRememberPin());
+        assertEquals(v.getStoredPin(), null);
+        assertFalse(v.getShouldStorePin());
         assertTrue(v.isConfigured());
 
         v = new Vehicle(null, TEST_PIN_2, false);
 
         assertEquals(v.getId(), null);
-        assertEquals(v.getPin(), null);
-        assertFalse(v.getRememberPin());
+        assertEquals(v.getStoredPin(), null);
+        assertFalse(v.getShouldStorePin());
         assertFalse(v.isConfigured());
 
         v = new Vehicle(null, null, true);
 
         assertEquals(v.getId(), null);
-        assertEquals(v.getPin(), null);
-        assertTrue(v.getRememberPin());
+        assertEquals(v.getStoredPin(), null);
+        assertTrue(v.getShouldStorePin());
         assertFalse(v.isConfigured());
 
         v = new Vehicle(TEST_ID_3, TEST_PIN_3, false);
 
         assertEquals(v.getId(), TEST_ID_3);
-        assertEquals(v.getPin(), null);
-        assertFalse(v.getRememberPin());
+        assertEquals(v.getStoredPin(), null);
+        assertFalse(v.getShouldStorePin());
         assertTrue(v.isConfigured());
 
         v = new Vehicle(TEST_ID_3, null, true);
 
         assertEquals(v.getId(), TEST_ID_3);
-        assertEquals(v.getPin(), null);
-        assertTrue(v.getRememberPin());
+        assertEquals(v.getStoredPin(), null);
+        assertTrue(v.getShouldStorePin());
         assertFalse(v.isConfigured());
 
         v = new Vehicle(null, TEST_PIN_3, true);
 
         assertEquals(v.getId(), null);
-        assertEquals(v.getPin(), TEST_PIN_3);
-        assertTrue(v.getRememberPin());
+        assertEquals(v.getStoredPin(), TEST_PIN_3);
+        assertTrue(v.getShouldStorePin());
         assertFalse(v.isConfigured());
 
         v = new Vehicle(TEST_ID_3, TEST_PIN_3, true);
 
         assertEquals(v.getId(), TEST_ID_3);
-        assertEquals(v.getPin(), TEST_PIN_3);
-        assertTrue(v.getRememberPin());
+        assertEquals(v.getStoredPin(), TEST_PIN_3);
+        assertTrue(v.getShouldStorePin());
         assertTrue(v.isConfigured());
 
     }
@@ -149,62 +148,66 @@ public class VehicleTest extends AndroidTestCase
     }
 
     public final void testSetPin() {
+
+    }
+
+    public final void testSetStoredPin() {
         Vehicle v = new Vehicle(TEST_ID_1, null, false);
 
-        assertEquals(v.getPin(), null);
+        assertEquals(v.getStoredPin(), null);
         assertTrue(v.isConfigured());
 
-        v.setPin("");
+        v.setStoredPin("");
 
-        assertEquals(v.getPin(), null);
+        assertEquals(v.getStoredPin(), null);
         assertTrue(v.isConfigured());
 
-        v.setPin(TEST_PIN_1);
+        v.setStoredPin(TEST_PIN_1);
 
-        assertEquals(v.getPin(), null);
+        assertEquals(v.getStoredPin(), null);
         assertTrue(v.isConfigured());
 
-        v.setPin(null);
+        v.setStoredPin(null);
 
-        assertEquals(v.getPin(), null);
+        assertEquals(v.getStoredPin(), null);
         assertTrue(v.isConfigured());
 
-        v.setRememberPin(true);
-        v.setPin("");
+        v.setShouldStorePin(true);
+        v.setStoredPin("");
 
-        assertEquals(v.getPin(), null);
+        assertEquals(v.getStoredPin(), null);
         assertFalse(v.isConfigured());
 
-        v.setPin(TEST_PIN_1);
+        v.setStoredPin(TEST_PIN_1);
 
-        assertEquals(v.getPin(), TEST_PIN_1);
+        assertEquals(v.getStoredPin(), TEST_PIN_1);
         assertTrue(v.isConfigured());
 
-        v.setPin(null);
+        v.setStoredPin(null);
 
-        assertEquals(v.getPin(), null);
+        assertEquals(v.getStoredPin(), null);
         assertFalse(v.isConfigured());
     }
 
-    public final void testSetRememberPin() {
+    public final void testSetShouldStorePin() {
         Vehicle v = new Vehicle(TEST_ID_1, null, true);
 
-        assertEquals(v.getPin(), null);
+        assertEquals(v.getStoredPin(), null);
         assertFalse(v.isConfigured());
 
-        v.setPin(TEST_PIN_1);
+        v.setStoredPin(TEST_PIN_1);
 
-        assertEquals(v.getPin(), TEST_PIN_1);
+        assertEquals(v.getStoredPin(), TEST_PIN_1);
         assertTrue(v.isConfigured());
 
-        v.setRememberPin(false);
+        v.setShouldStorePin(false);
 
-        assertEquals(v.getPin(), null);
+        assertEquals(v.getStoredPin(), null);
         assertTrue(v.isConfigured());
 
-        v.setRememberPin(true);
+        v.setShouldStorePin(true);
 
-        assertEquals(v.getPin(), null);
+        assertEquals(v.getStoredPin(), null);
         assertFalse(v.isConfigured());
     }
 
@@ -231,23 +234,23 @@ public class VehicleTest extends AndroidTestCase
 
         assertTrue(v1.equals(v2));
 
-        v1.setRememberPin(true);
+        v1.setShouldStorePin(true);
 
         assertFalse(v1.equals(v2));
 
-        v2.setRememberPin(true);
+        v2.setShouldStorePin(true);
 
         assertTrue(v1.equals(v2));
 
-        v1.setPin(TEST_PIN_1);
+        v1.setStoredPin(TEST_PIN_1);
 
         assertFalse(v1.equals(v2));
 
-        v2.setPin(TEST_PIN_2);
+        v2.setStoredPin(TEST_PIN_2);
 
         assertFalse(v1.equals(v2));
 
-        v2.setPin(TEST_PIN_1);
+        v2.setStoredPin(TEST_PIN_1);
 
         assertTrue(v1.equals(v2));
 
@@ -263,16 +266,16 @@ public class VehicleTest extends AndroidTestCase
 
         assertTrue(v1.equals(v2));
 
-        v1.setPin(TEST_PIN_3);
+        v1.setStoredPin(TEST_PIN_3);
 
         assertFalse(v1.equals(v2));
 
-        v2.setPin(null);
+        v2.setStoredPin(null);
 
         assertFalse(v1.equals(v2));
 
-        v1.setRememberPin(false);
-        v2.setRememberPin(false);
+        v1.setShouldStorePin(false);
+        v2.setShouldStorePin(false);
 
         assertTrue(v1.equals(v2));
     }

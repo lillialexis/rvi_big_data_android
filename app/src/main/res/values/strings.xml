@@ -9,4 +9,6 @@
     <string name="server_url_string">Server URL</string>
     <string name="done_string">Done</string>
     <string name="cancel_string">cancel</string>
+    <string name="rvi_test2_default_url">http://rvi-test2.nginfotpdx.net</string>
+    <string name="rvi_test2_default_port">8000</string>
 </resources>

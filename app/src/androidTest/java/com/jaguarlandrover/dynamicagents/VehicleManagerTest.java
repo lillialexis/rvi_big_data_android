@@ -36,13 +36,13 @@ public class VehicleManagerTest extends AndroidTestCase
     private final static String TEST_PIN_2 = "456";
     private final static String TEST_PIN_3 = "789";
 
-    private final static String TEST_STR_1 = "[{\"id\":\"ONE\",\"remember_pin\":false}]";
-    private final static String TEST_STR_2 = "[{\"id\":\"ONE\",\"remember_pin\":true}]";
-    private final static String TEST_STR_3 = "[{\"id\":\"ONE\",\"pin\":\"123\",\"remember_pin\":true}]";
-    private final static String TEST_STR_4 = "[{\"id\":\"ONE\",\"pin\":\"456\",\"remember_pin\":true}]";
-    private final static String TEST_STR_5 = "[{\"id\":\"ONE\",\"pin\":\"456\",\"remember_pin\":true},{\"id\":\"TWO\",\"remember_pin\":true},{\"id\":\"THREE\",\"remember_pin\":false}]";
-    private final static String TEST_STR_6 = "[{\"id\":\"ONE\",\"pin\":\"456\",\"remember_pin\":true},{\"id\":\"TWO\",\"pin\":\"789\",\"remember_pin\":true},{\"id\":\"THREE\",\"pin\":\"123\",\"remember_pin\":true}]";
-    private final static String TEST_STR_7 = "[{\"id\":\"ONE\",\"pin\":\"456\",\"remember_pin\":true},{\"id\":\"TWO\",\"pin\":\"789\",\"remember_pin\":true}]";
+    private final static String TEST_STR_1 = "[{\"id\":\"ONE\",\"should_store_pin\":false}]";
+    private final static String TEST_STR_2 = "[{\"id\":\"ONE\",\"should_store_pin\":true}]";
+    private final static String TEST_STR_3 = "[{\"id\":\"ONE\",\"stored_pin\":\"123\",\"should_store_pin\":true}]";
+    private final static String TEST_STR_4 = "[{\"id\":\"ONE\",\"stored_pin\":\"456\",\"should_store_pin\":true}]";
+    private final static String TEST_STR_5 = "[{\"id\":\"ONE\",\"stored_pin\":\"456\",\"should_store_pin\":true},{\"id\":\"TWO\",\"should_store_pin\":true},{\"id\":\"THREE\",\"should_store_pin\":false}]";
+    private final static String TEST_STR_6 = "[{\"id\":\"ONE\",\"stored_pin\":\"456\",\"should_store_pin\":true},{\"id\":\"TWO\",\"stored_pin\":\"789\",\"should_store_pin\":true},{\"id\":\"THREE\",\"stored_pin\":\"123\",\"should_store_pin\":true}]";
+    private final static String TEST_STR_7 = "[{\"id\":\"ONE\",\"stored_pin\":\"456\",\"should_store_pin\":true},{\"id\":\"TWO\",\"stored_pin\":\"789\",\"should_store_pin\":true}]";
 
     private String mSavedPrefsString;
 
@@ -123,8 +123,8 @@ public class VehicleManagerTest extends AndroidTestCase
 
         assertFalse(vehicle.isConfigured());
         assertEquals(null, vehicle.getId());
-        assertEquals(null, vehicle.getPin());
-        assertFalse(vehicle.getRememberPin());
+        assertEquals(null, vehicle.getStoredPin());
+        assertFalse(vehicle.getShouldStorePin());
     }
 
     public final void testVehicleManagerUpdateListener() {
@@ -143,12 +143,12 @@ public class VehicleManagerTest extends AndroidTestCase
         assertTrue(VehicleManager.isConfigured());
         assertTrue(vehicle1.isConfigured());
 
-        vehicle1.setPin(TEST_PIN_1); /* Shouldn't fire update event because 'mRememberPin' is still false */
+        vehicle1.setStoredPin(TEST_PIN_1); /* Shouldn't fire update event because 'mRememberPin' is still false */
         assertEquals(TEST_STR_1, getVehiclePrefsString());
         assertTrue(VehicleManager.isConfigured());
         assertTrue(vehicle1.isConfigured());
 
-        vehicle1.setRememberPin(true);
+        vehicle1.setShouldStorePin(true);
         assertEquals(TEST_STR_2, getVehiclePrefsString());
         assertFalse(VehicleManager.isConfigured());
         assertFalse(vehicle1.isConfigured());
@@ -158,7 +158,7 @@ public class VehicleManagerTest extends AndroidTestCase
 
         Vehicle vehicle2 = VehicleManager.getVehicles().get(0);
 
-        vehicle2.setPin(TEST_PIN_2);
+        vehicle2.setStoredPin(TEST_PIN_2);
         assertEquals(TEST_STR_4, getVehiclePrefsString());
         assertTrue(VehicleManager.isConfigured());
         assertTrue(vehicle2.isConfigured());
@@ -179,15 +179,15 @@ public class VehicleManagerTest extends AndroidTestCase
         VehicleManager.addVehicle(vehicle3);
         VehicleManager.addVehicle(vehicle4);
 
-        vehicle3.setRememberPin(true);
+        vehicle3.setShouldStorePin(true);
 
         assertEquals(TEST_STR_5, getVehiclePrefsString());
         assertFalse(VehicleManager.isConfigured());
 
-        vehicle4.setRememberPin(true);
+        vehicle4.setShouldStorePin(true);
 
-        vehicle3.setPin(TEST_PIN_3);
-        vehicle4.setPin(TEST_PIN_1);
+        vehicle3.setStoredPin(TEST_PIN_3);
+        vehicle4.setStoredPin(TEST_PIN_1);
 
         assertEquals(TEST_STR_6, getVehiclePrefsString());
 
@@ -221,7 +221,7 @@ public class VehicleManagerTest extends AndroidTestCase
 
         assertFalse(VehicleManager.isConfigured());
 
-        vehicle1.setPin(TEST_PIN_1);
+        vehicle1.setStoredPin(TEST_PIN_1);
 
         assertFalse(VehicleManager.isConfigured());
 
@@ -230,32 +230,32 @@ public class VehicleManagerTest extends AndroidTestCase
         assertTrue(vehicle1.isConfigured());
         assertFalse(VehicleManager.isConfigured());
 
-        vehicle1.setRememberPin(true);
+        vehicle1.setShouldStorePin(true);
 
         assertFalse(vehicle1.isConfigured());
         assertFalse(VehicleManager.isConfigured());
 
-        vehicle1.setPin(TEST_PIN_1);
+        vehicle1.setStoredPin(TEST_PIN_1);
 
         assertTrue(vehicle1.isConfigured());
         assertFalse(VehicleManager.isConfigured());
 
-        vehicle3.setPin(TEST_PIN_3);
+        vehicle3.setStoredPin(TEST_PIN_3);
 
         assertTrue(vehicle3.isConfigured());
         assertTrue(VehicleManager.isConfigured());
 
-        vehicle2.setPin("");
+        vehicle2.setStoredPin("");
 
         assertFalse(vehicle2.isConfigured());
         assertFalse(VehicleManager.isConfigured());
 
-        vehicle2.setPin(null);
+        vehicle2.setStoredPin(null);
 
         assertFalse(vehicle2.isConfigured());
         assertFalse(VehicleManager.isConfigured());
 
-        vehicle2.setRememberPin(false);
+        vehicle2.setShouldStorePin(false);
 
         assertTrue(vehicle2.isConfigured());
         assertTrue(VehicleManager.isConfigured());
@@ -284,12 +284,12 @@ public class VehicleManagerTest extends AndroidTestCase
         assertFalse(VehicleManager.isConfigured());
 
         vehicle1.setId(TEST_ID_1);
-        vehicle2.setPin("");
+        vehicle2.setStoredPin("");
 
         assertFalse(vehicle2.isConfigured());
         assertFalse(VehicleManager.isConfigured());
 
-        vehicle2.setRememberPin(false);
+        vehicle2.setShouldStorePin(false);
 
         assertTrue(vehicle2.isConfigured());
         assertTrue(VehicleManager.isConfigured());
@@ -327,7 +327,7 @@ public class VehicleManagerTest extends AndroidTestCase
         Vehicle vehicle = VehicleManager.getVehicles().get(0);
 
         assertEquals(vehicle.getId(), null);
-        assertEquals(vehicle.getPin(), null);
-        assertFalse(vehicle.getRememberPin());
+        assertEquals(vehicle.getStoredPin(), null);
+        assertFalse(vehicle.getShouldStorePin());
     }
 }

@@ -25,32 +25,34 @@ public class Vehicle
     @SerializedName("id")
     private String mId = null;
 
-    @SerializedName("pin")
-    private String mPin = null;
+    @SerializedName("stored_pin")
+    private String mStoredPin = null;
 
-    @SerializedName("remember_pin")
-    private Boolean mRememberPin = false;
+    @SerializedName("should_store_pin")
+    private Boolean mShouldStorePin = false;
+
+    private transient String mPin = null;
 
     private transient ArrayList<VehicleUpdateListener> mListeners = new ArrayList<>();
 
     public Vehicle() {
     }
 
-    public Vehicle(String id, String pin, boolean rememberPin) {
+    public Vehicle(String id, String storedPin, boolean shouldStorePin) {
         setId(id);
-        setRememberPin(rememberPin);
-        setPin(pin);
+        setShouldStorePin(shouldStorePin);
+        setStoredPin(storedPin);
     }
 
-    public String getPin() {
-        return mPin;
+    public String getStoredPin() {
+        return mStoredPin;
     }
 
-    public void setPin(String pin) {
-        if (!mRememberPin) return;
+    public void setStoredPin(String storedPin) {
+        if (!mShouldStorePin) return;
 
-        if (pin != null && pin.isEmpty()) pin = null;
-        mPin = pin;
+        if (storedPin != null && storedPin.isEmpty()) storedPin = null;
+        mStoredPin = storedPin;
 
         fireUpdate();
     }
@@ -66,15 +68,27 @@ public class Vehicle
         fireUpdate();
     }
 
-    public Boolean getRememberPin() {
-        return mRememberPin;
+    public Boolean getShouldStorePin() {
+        return mShouldStorePin;
     }
 
-    public void setRememberPin(Boolean rememberPin) {
-        if (!rememberPin) setPin(null);
+    public void setShouldStorePin(Boolean shouldStorePin) {
+        if (!shouldStorePin) setStoredPin(null);
 
-        mRememberPin = rememberPin;
+        mShouldStorePin = shouldStorePin;
         fireUpdate();
+    }
+
+    public String getPin() {
+        if (mStoredPin != null) return mStoredPin;
+
+        return mPin;
+    }
+
+    public void setPin(String pin) {
+        if (pin != null && pin.isEmpty()) pin = null;
+
+        mPin = pin;
     }
 
     public boolean equals(Vehicle other) {
@@ -82,16 +96,16 @@ public class Vehicle
         if (this.getId() == null && other.getId() != null) return false;
         if (this.getId() != null && !this.getId().equals(other.getId())) return false;
 
-        if (this.getPin() == null && other.getPin() != null) return false;
-        if (this.getPin() != null && !this.getPin().equals(other.getPin())) return false;
+        if (this.getStoredPin() == null && other.getStoredPin() != null) return false;
+        if (this.getStoredPin() != null && !this.getStoredPin().equals(other.getStoredPin())) return false;
 
-        if (this.getRememberPin() != other.getRememberPin()) return false;
+        if (this.getShouldStorePin() != other.getShouldStorePin()) return false;
 
         return true;
     }
 
     public boolean isConfigured() {
-        return !(mId == null || (mRememberPin && mPin == null));
+        return !(mId == null || (mShouldStorePin && mStoredPin == null));
     }
 
     public void addVehicleUpdateListener(VehicleUpdateListener listener) {
